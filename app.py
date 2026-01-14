@@ -16,7 +16,9 @@ if not GOOGLE_API_KEY:
     st.stop()
 
 genai.configure(api_key=GOOGLE_API_KEY)
-PDF_PATH = r"Data_Content_Network.pdf"
+
+# ⚠️ แก้ไข Path: เอาไฟล์ PDF มาวางไว้คู่กับไฟล์ app.py แล้วใช้ชื่อไฟล์ตรงๆ
+PDF_PATH = "Data_Content_Network.pdf"
 
 # ================= Page Config =================
 st.set_page_config(
@@ -32,16 +34,14 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
     
     :root {
-        /* Soft Sky Blue Palette */
-        --primary-color: #38BDF8; /* Sky Blue */
-        --primary-dark: #0284C7;  /* Deep Sky */
-        --secondary-color: #E0F2FE; /* Pale Blue */
-        --text-color: #334155;    /* Slate Gray */
-        --bg-color: #F0F9FF;      /* Alice Blue */
+        --primary-color: #38BDF8;
+        --primary-dark: #0284C7;
+        --secondary-color: #E0F2FE;
+        --text-color: #334155;
+        --bg-color: #F0F9FF;
         --white: #FFFFFF;
     }
 
-    /* Reset & Base */
     .stApp {
         background-color: var(--bg-color);
         background-image: radial-gradient(#E0F2FE 1px, transparent 1px);
@@ -50,33 +50,27 @@ st.markdown("""
         color: var(--text-color);
     }
     
-    /* Hide Default Elements */
     div[data-testid="stStatusWidget"], header, footer { display: none; }
     
-    /* Layout Adjustment */
     .block-container {
         padding-top: 2rem !important;
         padding-bottom: 7rem !important;
         max-width: 900px !important;
     }
 
-    /* ========== 1. Chat Bubbles (Soft Blue Style) ========== */
-    /* User Message */
+    /* Chat Bubbles */
     div[data-testid="stChatMessage"]:has([data-testid="stChatMessageContent"]:first-child) {
         flex-direction: row-reverse;
         text-align: right;
     }
-    
     div[data-testid="stChatMessage"]:has([data-testid="stChatMessageContent"]:first-child) [data-testid="stChatMessageContent"] {
-        background: linear-gradient(135deg, #7DD3FC 0%, #0EA5E9 100%); /* Soft Gradient */
+        background: linear-gradient(135deg, #7DD3FC 0%, #0EA5E9 100%);
         color: white;
         border-radius: 20px 20px 4px 20px;
         box-shadow: 0 4px 10px rgba(14, 165, 233, 0.2);
         padding: 12px 20px;
         border: none;
     }
-
-    /* AI Message */
     div[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageContent"]:first-child)) [data-testid="stChatMessageContent"] {
         background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(5px);
@@ -87,7 +81,6 @@ st.markdown("""
         padding: 12px 20px;
     }
 
-    /* Avatars */
     .stChatMessage .stChatMessageAvatar {
         background-color: white !important;
         border: 2px solid #E0F2FE;
@@ -95,7 +88,7 @@ st.markdown("""
         padding: 2px;
     }
 
-    /* ========== 2. Hero Section (Empty State) ========== */
+    /* Hero Section */
     .hero-container {
         text-align: center;
         padding: 3rem 1rem;
@@ -106,49 +99,22 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(14, 165, 233, 0.05);
         animation: fadeIn 0.8s ease-out;
     }
-    
-    .hero-icon {
-        font-size: 5rem;
-        margin-bottom: 0.5rem;
-        filter: drop-shadow(0 4px 6px rgba(14, 165, 233, 0.2));
-        animation: float 3s ease-in-out infinite;
-    }
-    
-    .hero-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #0284C7; /* Darker blue text */
-        margin-bottom: 0.5rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .hero-subtitle {
-        font-size: 1rem;
-        color: #64748B;
-        margin-bottom: 2rem;
-    }
+    .hero-icon { font-size: 5rem; margin-bottom: 0.5rem; animation: float 3s ease-in-out infinite; }
+    .hero-title { font-size: 2rem; font-weight: 700; color: #0284C7; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif; }
+    .hero-subtitle { font-size: 1rem; color: #64748B; margin-bottom: 2rem; }
 
-    /* Suggestion Cards Grid */
-    .suggestion-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-
-    /* Custom Button Style for Suggestions */
+    /* Buttons */
     .stButton button {
         background-color: white !important;
         border: 1px solid #E0F2FE !important;
         border-radius: 16px !important;
         padding: 1rem !important;
         text-align: left !important;
-        box-shadow: 0 4px 0px #E0F2FE !important; /* Cute 3D effect */
+        box-shadow: 0 4px 0px #E0F2FE !important;
         transition: all 0.2s ease !important;
         height: 100% !important;
         width: 100% !important;
     }
-
     .stButton button:hover {
         border-color: #38BDF8 !important;
         background-color: #F0F9FF !important;
@@ -156,53 +122,24 @@ st.markdown("""
         box-shadow: 0 6px 0px #BAE6FD !important;
         color: #0284C7 !important;
     }
-    
-    .stButton button p {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #475569 !important;
-    }
+    .stButton button p { font-size: 0.95rem; font-weight: 600; color: #475569 !important; }
 
-    /* ========== 3. Input Area ========== */
-    .stChatInput {
-        bottom: 20px !important;
-    }
-    
+    /* Input */
+    .stChatInput { bottom: 20px !important; }
     .stChatInput > div {
-        background-color: white;
-        border-radius: 30px;
+        background-color: white; border-radius: 30px;
         box-shadow: 0 8px 30px rgba(14, 165, 233, 0.15);
-        border: 1px solid #BAE6FD;
-        padding-bottom: 0 !important;
+        border: 1px solid #BAE6FD; padding-bottom: 0 !important;
     }
-    
-    .stChatInput textarea {
-        height: 50px !important;
-        padding-top: 12px !important;
-        color: #334155 !important;
-    }
+    .stChatInput textarea { height: 50px !important; padding-top: 12px !important; color: #334155 !important; }
 
-    /* ========== Animations ========== */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background-color: white;
-        border-right: 1px solid #F1F5F9;
-    }
-    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+    section[data-testid="stSidebar"] { background-color: white; border-right: 1px solid #F1F5F9; }
     </style>
 """, unsafe_allow_html=True)
 
-# ================= Logic =================
+# ================= Utility Functions =================
 
 HISTORY_FILE = "chat_history.json"
 
@@ -216,6 +153,20 @@ def save_history(user_msg, ai_msg):
     with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
         json.dump(history[-20:], f, ensure_ascii=False, indent=2)
 
+# --- ฟังก์ชันใหม่: ดึงรายชื่อโมเดลจริงๆ จาก Account ---
+@st.cache_resource
+def get_available_models():
+    try:
+        models = []
+        for m in genai.list_models():
+            if 'generateContent' in m.supported_generation_methods:
+                # กรองเอาเฉพาะโมเดล Gemini ที่น่าใช้
+                if 'gemini' in m.name:
+                    models.append(m.name)
+        return models
+    except Exception as e:
+        return ["models/gemini-1.5-flash"] # Fallback
+
 @st.cache_resource(show_spinner=False)
 def get_gemini_file(path):
     if not os.path.exists(path): return None
@@ -225,20 +176,44 @@ def get_gemini_file(path):
             time.sleep(1)
             file = genai.get_file(file.name)
         return file
-    except: return None
+    except Exception as e:
+        st.error(f"Upload Error: {str(e)}")
+        return None
 
-# ================= UI Structure =================
-
-# 1. Sidebar (Control Panel)
+# ================= Sidebar =================
 with st.sidebar:
-    # รูปบอท AI และข้อความตามที่คุณต้องการ
     st.image("https://cdn-icons-png.flaticon.com/512/4712/4712109.png", width=70)
     st.title("Network Genius")
     st.markdown("<div style='color:#64748B; margin-top:-15px; font-size:0.9rem;'>AI Assistant for Network Ops</div>", unsafe_allow_html=True)
     
     st.divider()
     
-    # File Status Indicator
+    # --- Model Selection (Auto-Detect) ---
+    st.markdown("### ⚙️ เลือกโมเดล (Auto-Detected)")
+    
+    # ดึงรายชื่อโมเดลที่มีจริงๆ ในบัญชี
+    available_models = get_available_models()
+    
+    if available_models:
+        # พยายามเลือกตัว Flash เป็นค่าเริ่มต้นถ้ามี
+        default_idx = 0
+        for i, m in enumerate(available_models):
+            if "flash" in m and "1.5" in m:
+                default_idx = i
+                break
+        
+        selected_model = st.selectbox(
+            "Available Models:",
+            options=available_models,
+            index=default_idx
+        )
+    else:
+        st.error("ไม่สามารถเชื่อมต่อ Google API ได้ กรุณาเช็ก API Key")
+        selected_model = "models/gemini-pro"
+
+    st.divider()
+    
+    # File Status
     if "gemini_file" not in st.session_state:
         with st.spinner("☁️ Connecting to Knowledge Base..."):
             file_obj = get_gemini_file(PDF_PATH)
@@ -246,26 +221,27 @@ with st.sidebar:
                 st.session_state.gemini_file = file_obj
                 st.success("✅ Knowledge Base Online")
             else:
-                st.error("❌ Knowledge Base Offline")
+                st.error(f"❌ ไม่พบไฟล์: {PDF_PATH}")
+                st.warning("⚠️ กรุณาวางไฟล์ PDF ไว้ที่เดียวกับไฟล์ app.py")
     else:
         st.info("✅ Database Active")
 
     st.divider()
     
-    if st.button("✨ เริ่มบทสนทนาใหม่", use_container_width=True, type="primary"):
+    if st.button("✨ Reset Chat", use_container_width=True, type="primary"):
         st.session_state.messages = []
         st.rerun()
-        
-    st.markdown("---")
-    st.caption(f"Powered by Gemini 2.5 Flash\nChat Session: {datetime.now().strftime('%H:%M')}")
 
-# 2. Main Chat Interface
+    st.markdown("---")
+    st.caption(f"Model: {selected_model}")
+
+# ================= Main Chat =================
+
 if "messages" not in st.session_state: st.session_state.messages = []
 
-# ใช้ Placeholder เพื่อจัดการ Hero Section (แก้ปัญหาต้องพิมพ์ 2 ครั้ง)
 hero_placeholder = st.empty()
 
-# --- HERO SECTION (Empty State) ---
+# Hero Section
 if len(st.session_state.messages) == 0:
     with hero_placeholder.container():
         st.markdown("""
@@ -276,7 +252,6 @@ if len(st.session_state.messages) == 0:
             </div>
         """, unsafe_allow_html=True)
         
-        # Interactive Suggestion Cards
         col1, col2 = st.columns(2)
         with col1:
             if st.button("📝 สรุปเนื้อหาสำคัญ\nช่วยสรุป Concept หลักจากไฟล์ PDF นี้ให้หน่อย", use_container_width=True):
@@ -285,7 +260,6 @@ if len(st.session_state.messages) == 0:
             if st.button("🔧 เทคนิคการ Config\nสอนวิธี Config VLAN และ Trunking บน Switch", use_container_width=True):
                 st.session_state.pending_prompt = "สอนวิธี Config VLAN และ Trunking บน Switch"
                 st.rerun()
-                
         with col2:
             if st.button("🌐 อธิบาย OSPF\nอธิบายหลักการทำงานของ OSPF แบบเข้าใจง่าย", use_container_width=True):
                 st.session_state.pending_prompt = "อธิบายหลักการทำงานของ OSPF แบบเข้าใจง่าย"
@@ -294,15 +268,13 @@ if len(st.session_state.messages) == 0:
                 st.session_state.pending_prompt = "แนะนำขั้นตอนการ Troubleshoot เบื้องต้น"
                 st.rerun()
 
-# --- CHAT HISTORY ---
-# แสดงประวัติการคุย (อยู่นอกเงื่อนไข else เพื่อให้แสดงผลเสมอหลังจากพิมพ์)
+# Chat History
 for message in st.session_state.messages:
-    # Custom Avatar Logic
     avatar = "🧑‍💻" if message["role"] == "user" else "⚡"
     with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# 3. Input Handling
+# Input Handling
 if prompt := st.chat_input("พิมพ์คำถามของคุณที่นี่..."):
     final_prompt = prompt
 elif "pending_prompt" in st.session_state:
@@ -311,49 +283,50 @@ elif "pending_prompt" in st.session_state:
 else:
     final_prompt = None
 
-# 4. Processing (Logic fix: Removed st.rerun loop)
+# Processing
 if final_prompt:
-    # เคลียร์ Hero Section ทันทีเมื่อมีการพิมพ์
     hero_placeholder.empty()
 
-    # Show User Message
     st.session_state.messages.append({"role": "user", "content": final_prompt})
     with st.chat_message("user", avatar="🧑‍💻"):
         st.markdown(final_prompt)
 
-    # Generate Response
     if "gemini_file" in st.session_state:
         with st.chat_message("assistant", avatar="⚡"):
             msg_placeholder = st.empty()
             full_res = ""
             try:
-               # --- MODEL CONFIGURATION: ปรับจูนให้แม่นยำที่สุด ---
+                # 1. Config Model
                 model = genai.GenerativeModel(
-                    model_name="gemini-2.5-flash", 
-                    
-                    # 1. ปรับ Temperature เป็น 0.0 (ห้ามมั่ว เอาชัวร์ 100%)
-                    generation_config={"temperature": 0.15},
-                    
-                    # 2. ใส่คำสั่งกำกับพฤติกรรมอย่างละเอียด (System Instruction)
+                    model_name=selected_model,
+                    generation_config={
+                        "temperature": 0.0, # แม่นยำ ไม่มั่ว
+                        "max_output_tokens": 2048,
+                    },
                     system_instruction="""
                     You are a strict Network Engineering Expert. 
-                    Your goal is to answer questions based ONLY on the provided PDF file.
-                    
-                    Rules:
-                    1. Accuracy: Use the information from the file as your primary source of truth.
-                    2. Configuration: If asked for 'Config', provide exact CLI commands found in the document.
-                    3. Unknowns: If the answer is NOT in the file, politely say 'ขออภัยครับ ข้อมูลส่วนนี้ไม่มีในเอกสารอ้างอิง'. Do not make up answers.
-                    4. Tone: Professional, concise, and technical.
+                    Answer questions based ONLY on the provided PDF file.
+                    If answer is not in the file, say 'ขออภัย ข้อมูลส่วนนี้ไม่มีในเอกสาร'.
                     """
                 )
                 
-                # History Logic (Exclude current user message to avoid duplication in context if needed, but Gemini handles it)
-                history = [{"role": "user", "parts": [st.session_state.gemini_file, "Answer based on this file."]}]
-                for m in st.session_state.messages[:-1]: # เอาประวัติเก่า (ไม่รวมคำถามปัจจุบัน)
+                # 2. Build History (สำคัญ: ต้องใส่ PDF ทุกครั้งที่เริ่ม Chat ใหม่ใน Streamlit)
+                history = [
+                    {
+                        "role": "user", 
+                        "parts": [
+                            st.session_state.gemini_file, 
+                            "Answer based on this file. Do not use outside knowledge."
+                        ]
+                    }
+                ]
+                
+                # เติมประวัติการคุยเก่า
+                for m in st.session_state.messages[:-1]:
                     role = "model" if m["role"] == "assistant" else "user"
                     history.append({"role": role, "parts": [m["content"]]})
 
-                # Stream
+                # 3. Generate Response
                 chat = model.start_chat(history=history)
                 response = chat.send_message(final_prompt, stream=True)
                 
@@ -368,7 +341,12 @@ if final_prompt:
                 save_history(final_prompt, full_res)
                 
             except Exception as e:
-                st.error(f"Error: {str(e)}")
+                err_msg = str(e)
+                if "429" in err_msg:
+                    st.error(f"⚠️ โมเดล {selected_model} โควตาเต็ม! กรุณาเลือกตัวอื่นจาก Dropdown ด้านซ้าย")
+                elif "404" in err_msg:
+                    st.error(f"⚠️ โมเดล {selected_model} ใช้ไม่ได้กับ Key นี้ กรุณาเลือกตัวอื่นจาก Dropdown")
+                else:
+                    st.error(f"Error: {err_msg}")
     else:
-
         st.error("Connection Lost. Please refresh.")
