@@ -16,7 +16,7 @@ if not GOOGLE_API_KEY:
     st.stop()
 
 genai.configure(api_key=GOOGLE_API_KEY)
-PDF_PATH = r"demo\workaw_chatbot\workaw\Data_Content_Network.pdf"
+PDF_PATH = r"Data_Content_Network.pdf"
 
 # ================= Page Config =================
 st.set_page_config(
@@ -370,4 +370,5 @@ if final_prompt:
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     else:
+
         st.error("Connection Lost. Please refresh.")
