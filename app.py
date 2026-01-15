@@ -300,7 +300,7 @@ if final_prompt:
                 model = genai.GenerativeModel(
                     model_name=selected_model,
                     generation_config={
-                        "temperature": 0.0, # แม่นยำ ไม่มั่ว
+                        "temperature": 0.3, # แม่นยำ ไม่มั่ว
                         "max_output_tokens": 2048,
                     },
                     system_instruction="""
@@ -350,3 +350,4 @@ if final_prompt:
                     st.error(f"Error: {err_msg}")
     else:
         st.error("Connection Lost. Please refresh.")
+
