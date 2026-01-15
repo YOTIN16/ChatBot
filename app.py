@@ -1,3 +1,5 @@
+from google.generativeai.types 
+import HarmCategory, HarmBlockThreshold
 import os
 import time
 import json
@@ -335,31 +337,33 @@ if final_prompt:
             msg_placeholder = st.empty()
             full_res = ""
             try:
-                # ... (ส่วนโค้ดด้านบนเหมือนเดิม) ...
-
+               # 1. ตั้งค่าโมเดล (Config Model)
                 model = genai.GenerativeModel(
                     model_name=selected_model,
-                    
-                    # ปรับให้ยืดหยุ่นขึ้นเล็กน้อย 
                     generation_config={
                         "temperature": 0.3, 
                         "top_p": 0.8, 
                         "top_k": 40, 
                         "max_output_tokens": 2048
                     },
-                    
-                    # ⭐ แก้ตรงนี้ครับ! (เพิ่มบทบาทให้มัน)
+                    # ⭐ เพิ่มส่วนนี้: ปลดล็อกความปลอดภัย (เพราะเราคุยเรื่อง Network ไม่ใช่เรื่องผิดกฎหมาย)
+                    safety_settings={
+                        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+                        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+                        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+                        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+                    },
+                    # System Instruction 
                     system_instruction="""
                     You are 'Network Genius', an AI assistant specialized in Network Operations.
                     
                     Instructions:
                     1. Identity: If the user asks "Who are you?" or greets you, introduce yourself politely as an AI assistant helping with the uploaded Network documentation.
                     2. Knowledge Base: For technical questions, answer based ONLY on the provided PDF file.
-                    3. Unknowns: If the answer is not in the file, say 'ขออภัย ข้อมูลส่วนนี้ไม่มีในเอกสาร' (Sorry, this info is not in the document).
+                    3. Unknowns: If the answer is not in the file, say 'ขออภัย ข้อมูลส่วนนี้ไม่มีในเอกสาร'.
                     4. Tone: Helpful, professional, and concise.
                     """
                 )
-
                 # ... (ส่วนโค้ดด้านล่างเหมือนเดิม) ...
                 
                 history = [{"role": "user", "parts": [st.session_state.gemini_file, "Answer based on this file. Do not use outside knowledge."]}]
@@ -389,4 +393,5 @@ if final_prompt:
                 else:
                     st.error(f"Error: {err_msg}")
     else:
+
         st.error("Connection Lost. Please refresh.")
