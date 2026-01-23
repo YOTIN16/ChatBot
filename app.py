@@ -351,7 +351,7 @@ if final_prompt:
             try:
                 model = genai.GenerativeModel(
                     model_name=selected_model,
-                    generation_config={"temperature": 0.3, "top_p": 0.8, "top_k": 40, "max_output_tokens": 2048},
+                    generation_config={"temperature": 0.3, "top_p": 0.8, "top_k": 40, "max_output_tokens": 4096},
                     safety_settings={
                         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
                         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -386,3 +386,4 @@ if final_prompt:
                 elif "finish_reason" in err: st.error("⚠️ AI หยุดทำงาน (Safety/Length) -> กดปุ่ม 'ล้างประวัติ' แล้วลองใหม่")
                 else: st.error(f"Error: {err}")
     else: st.error("Connection Lost. Refresh page.")
+
