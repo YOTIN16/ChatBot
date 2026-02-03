@@ -10,7 +10,7 @@ import dotenv
 # ==========================================
 # 0. 🛠️ ระบบจัดการ Path อัตโนมัติ
 # ==========================================
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(_file_))
 PDF_PATH = os.path.join(BASE_DIR, "Data_Content_Network.pdf")
 HISTORY_FILE = os.path.join(BASE_DIR, "chat_history.json")
 ENV_PATH = os.path.join(BASE_DIR, ".env")
@@ -296,8 +296,8 @@ with st.sidebar:
                 try:
                     for chat in reversed(json.load(f)):
                         st.caption(f"🕒 {chat.get('timestamp','').replace('T',' ')[:16]}")
-                        st.markdown(f"**You:** {chat.get('user')}")
-                        st.info(f"**AI:** {chat.get('ai')}")
+                        st.markdown(f"*You:* {chat.get('user')}")
+                        st.info(f"*AI:* {chat.get('ai')}")
                         st.markdown("---")
                 except: pass
     
@@ -358,26 +358,11 @@ if final_prompt:
                         HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
                         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
                     },
-                    PROMPT_NETWORK = """
-Role: You are "Network Genius", an expert AI Network Engineer.
-
-Primary Directive: Answer the user's technical questions based STRICTLY and ONLY on the provided attached document (Context). You are forbidden from using outside knowledge or internet data.
-
-Strict Operational Rules:
-1. **Context Grounding:** Your response must be derived 100% from the provided file. Do not guess.
-2. **Response Language:** You MUST respond in **Thai Language** (Technical terms can remain in English).
-3. **Citation:** Cite the specific section or page number if possible.
-4. **Step-by-Step:** For configuration tasks, use Code Blocks to show commands clearly.
-5. **Handling Missing Information:** If the answer is not in the file, reply exactly: "ขออภัย ข้อมูลส่วนนี้ไม่มีปรากฏในเอกสารคู่มือครับ"
-
-Example Interaction (Few-Shot):
-User: "วิธีตั้งค่า VLAN ทำยังไง?"
-AI: "จากการตั้งค่าในหน้า 15 ขั้นตอนการสร้าง VLAN มีดังนี้ครับ:
-1. เข้าสู่ Global Configuration Mode
-2. พิมพ์คำสั่ง:
-```text
-Switch(config)# vlan 10
-Switch(config-vlan)# name Sales
+                    system_instruction="""
+                    You are 'Network Genius', an AI assistant specialized in Network Operations.
+                    1. If asked "Who are you", introduce yourself politely.
+                    2. For technical questions, answer based ONLY on the provided PDF file.
+                    3. If answer is not in file, say 'ขออภัย ข้อมูลส่วนนี้ไม่มีในเอกสาร'.
                     """
                 )
                 
@@ -401,6 +386,3 @@ Switch(config-vlan)# name Sales
                 elif "finish_reason" in err: st.error("⚠️ AI หยุดทำงาน (Safety/Length) -> กดปุ่ม 'ล้างประวัติ' แล้วลองใหม่")
                 else: st.error(f"Error: {err}")
     else: st.error("Connection Lost. Refresh page.")
-
-
-
