@@ -10,7 +10,7 @@ import dotenv
 # ==========================================
 # 0. 🛠️ ระบบจัดการ Path อัตโนมัติ
 # ==========================================
-BASE_DIR = os.path.dirname(os.path.abspath(_file_))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_PATH = os.path.join(BASE_DIR, "Data_Content_Network.pdf")
 HISTORY_FILE = os.path.join(BASE_DIR, "chat_history.json")
 ENV_PATH = os.path.join(BASE_DIR, ".env")
@@ -386,3 +386,4 @@ if final_prompt:
                 elif "finish_reason" in err: st.error("⚠️ AI หยุดทำงาน (Safety/Length) -> กดปุ่ม 'ล้างประวัติ' แล้วลองใหม่")
                 else: st.error(f"Error: {err}")
     else: st.error("Connection Lost. Refresh page.")
+
